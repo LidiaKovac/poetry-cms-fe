@@ -11,9 +11,11 @@ import {
 } from "recharts"
 import { useEffect, useState } from "react"
 import { CMS } from "./views/CMS/CMS"
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css"
 import { Navigation } from "./components/Nav/Nav"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { SingleView } from "./views/SingleView/SingleView"
+import { Stats } from "./views/Stats/Stats"
 
 function App() {
   const [query, setQuery] = useState("")
@@ -44,14 +46,14 @@ function App() {
     //   {/* <Bar yAxisId="right" dataKey="uv" fill="#82ca9d" /> */}
     // </BarChart>
     <>
-    <BrowserRouter>
-    <Navigation getQuery={(d)=> setQuery(d)}/>
-    <Routes>
-    <Route path="/" element={<CMS query={query}/>} />
-    
-
-    </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Navigation getQuery={(d) => setQuery(d)} />
+        <Routes>
+          <Route path="/" element={<CMS query={query} />} />
+          <Route path="/:id" element={<SingleView/>} />
+          <Route path="/stats" element={<Stats/>}/>
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }

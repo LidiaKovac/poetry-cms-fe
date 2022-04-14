@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import { Tag } from "../Tag/Tag"
 
 // import "./Single.scss"
-export const Single = ({ poem }) => {
+export const Single = ({ poem, filterBy }) => {
   return (
     <>
       {/* <tr>
@@ -12,10 +14,11 @@ export const Single = ({ poem }) => {
       </tr> */}
       <tr>
       
-          <td>{poem.title}</td>
+          <td><strong>{poem.title}</strong></td>
           <td>{poem.author}</td>
           <td>{poem.source}</td>
           <td>{poem.year}</td>
+          <td>{poem.tags?.map(t => <Tag key={t._id} word={t} filter={filterBy}/> )}</td>
           <td><Link to={"/" + poem._id}> HERE </Link></td>
       
       </tr>
