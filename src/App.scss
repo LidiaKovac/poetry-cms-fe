@@ -1,0 +1,12 @@
+@import "./styling/_Flex.scss";
+.spinner__wrap {
+  width: 100vw;
+  height: 100vh;
+  @include row-center
+}
+.spinner {
+  /* redfines react-bootstrap spinner classes */
+  width: 100px!important;
+  height: 100px!important;
+  border-width: 10px!important;
+}

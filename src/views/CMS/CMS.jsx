@@ -14,9 +14,14 @@ export const CMS = ({ query }) => {
   const [filters, setFilters] = useState([])
 
   const filterBy = (tag) => {
-    let updated = [...filters, tag]
-    setFilters(updated)
+    if(!filters.map(f => f.word).includes(tag.word)) {
+
+      let updated = [...filters, tag]
+      setFilters(updated)
+    }
   }
+
+  
   useEffect(() => {
     getPoems()
       .then((res) => setPoems(res))
@@ -57,11 +62,13 @@ export const CMS = ({ query }) => {
   }, [filters])
   return (
     <>
-      <h1>Laddade Dikter</h1>
-      {loading ? (
-        <Spinner animation="border" role="status"></Spinner>
+      {loading ? ( <div className="spinner__wrap">
+
+        <Spinner className="spinner" animation="border" role="status"></Spinner>
+      </div>
       ) : (
         <Container className="cms__wrap">
+          <h1>Laddade Dikter</h1>
           <Table striped bordered hover>
             <thead>
               <tr>
