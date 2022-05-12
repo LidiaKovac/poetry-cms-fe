@@ -49,14 +49,13 @@ export const CMS = () => {
     dispatch(setFiltered(query))
   }, [query])
 
-  useEffect(()=> {
+  useEffect(() => {
     ref.current = Number(filtered.length)
-   
+
     if (ref.current === 0 && prev > 0) {
       dispatch(throwError("No results"))
     }
-    console.log(ref, prev);
-    
+    console.log(ref, prev)
   }, [filtered])
 
   useEffect(() => {
@@ -78,7 +77,6 @@ export const CMS = () => {
       {loading ? (
         <Spinner animation="border" role="status"></Spinner>
       ) : (
-        
         <Container className="cms__wrap">
           {poemError}
           <Table striped bordered hover>
@@ -134,8 +132,7 @@ export const CMS = () => {
               </tr>
             </thead>
             <tbody>
-              
-              {(filtered.length > 0)
+              {(filtered.length > 0 && query.length > 0)
                 ? filtered.map((p) => {
                     return <Single key={p._id} poem={p} />
                   })
