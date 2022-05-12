@@ -1,58 +1,75 @@
-import { useEffect, useState } from "react"
+import { stat } from "fs"
+import { useEffect, useRef, useState } from "react"
 import { Container, Table, Dropdown, Spinner } from "react-bootstrap"
+import { useDispatch, useSelector } from "react-redux"
 import { getPoems } from "../../API"
+import { setError } from "../../app/reducers/errorReducer"
+import { setLoading } from "../../app/reducers/loadingReducer"
+import {
+  set,
+  setBySource,
+  setFiltered,
+  setTags,
+  throwError,
+} from "../../app/reducers/poemsReducer"
+import { RootState } from "../../app/store"
 import { Single } from "../../components/Single/Single"
 import { Tag } from "../../components/Tag/Tag"
 import "./CMS.scss"
-export const CMS = ({ query }) => {
-  const [poems, setPoems] = useState([])
+export const CMS = () => {
+  const dispatch = useDispatch()
+  const poems = useSelector((state: RootState) => state.poems.all)
+  const filtered = useSelector((state: RootState) => state.poems.filtered)
+  const poemError = useSelector((state: RootState) => state.poems.error)
   const [sort, setSort] = useState("title")
 
-  const [sources, setSrc] = useState([])
-  const [selected, setSelected] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [filters, setFilters] = useState([])
+  const [sources, setSrc] = useState<Set<string>>(new Set())
 
-  const filterBy = (tag) => {
-    let updated = [...filters, tag]
-    setFilters(updated)
+  const [selected, setSelected] = useState("")
+  const loading = useSelector((state: RootState) => state.loading.value)
+  const setLoader = (isLoading: Boolean) => {
+    dispatch(setLoading(isLoading))
   }
+  const ref = useRef(0)
+  const prev = ref.current
+  const filters = useSelector((state: RootState) => state.filters.value)
+  const query = useSelector((state: RootState) => state.query.value)
+
   useEffect(() => {
     getPoems()
-      .then((res) => setPoems(res))
+      .then((res) => dispatch(set(res)))
       .then(() => {
-        setSrc([...new Set(poems.map((p) => p.source.toLowerCase()))])
+        setSrc(new Set(poems.map((p) => p.source.toLowerCase())))
       })
       .then(() => {
-        setLoading(false)
+        setLoader(false)
       })
   }, [])
   useEffect(() => {
-    getPoems().then((res) =>
-      setPoems(
-        res.filter((p) =>
-          p.title.toLowerCase().includes(query ? query.toLowerCase() : "")
-        )
-      )
-    )
+    dispatch(setFiltered(query))
   }, [query])
+
+  useEffect(()=> {
+    ref.current = Number(filtered.length)
+   
+    if (ref.current === 0 && prev > 0) {
+      dispatch(throwError("No results"))
+    }
+    console.log(ref, prev);
+    
+  }, [filtered])
+
   useEffect(() => {
-    getPoems().then((res) =>
-      setPoems(
-        res.filter((p) =>
-          p.source.toLowerCase().includes(selected.toLowerCase())
-        )
-      )
-    )
+    dispatch(setBySource(selected))
   }, [selected])
   useEffect(() => {
-    setLoading(true)
+    setLoader(true)
     getPoems(`tag=${filters.map((filter) => filter.word).join("+")}`)
       .then((res) => {
-        setPoems(res)
+        dispatch(setTags(res))
       })
       .then(() => {
-        setLoading(false)
+        setLoader(false)
       })
   }, [filters])
   return (
@@ -61,7 +78,9 @@ export const CMS = ({ query }) => {
       {loading ? (
         <Spinner animation="border" role="status"></Spinner>
       ) : (
+        
         <Container className="cms__wrap">
+          {poemError}
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -107,25 +126,24 @@ export const CMS = ({ query }) => {
                 <th>
                   {" "}
                   Tags{" "}
-                  {filters.map((f) => (
-                    <Tag
-                      word={f}
-                      filter={(tag) =>{ 
-                        console.log(tag);
-                        setFilters(filters.filter((f) => f.word !== tag.word))
-                     } }
-                    />
+                  {filters.map((f: Tag) => (
+                    <Tag word={f} />
                   ))}{" "}
                 </th>
                 <th> Link </th>
               </tr>
             </thead>
             <tbody>
-              {poems
-                .sort((a, b) => a[sort].localeCompare(b[sort]))
-                .map((p) => {
-                  return <Single key={p._id} poem={p} filterBy={filterBy} />
-                })}
+              
+              {(filtered.length > 0)
+                ? filtered.map((p) => {
+                    return <Single key={p._id} poem={p} />
+                  })
+                : poems
+                    // .sort((a, b) => a[sort as keyof Poem].localeCompare(b[sort as keyof Poem]))
+                    .map((p) => {
+                      return <Single key={p._id} poem={p} />
+                    })}
             </tbody>
           </Table>
         </Container>
