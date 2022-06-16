@@ -1,4 +1,4 @@
-export const getQueryString = (queryObject:APIQuery):string => {
+export const getQueryString = (queryObject:APIQuery, page:number):string => {
     let finalString = "?"
     Object.keys(queryObject).forEach((key, i) => {
         // if(i > 0 && queryObject[key as keyof APIQuery].size > 0) finalString += "&"
@@ -8,5 +8,5 @@ export const getQueryString = (queryObject:APIQuery):string => {
         finalString += key + "=" + query + "&"
 
     })
-    return finalString
+    return finalString + "page=" + page
 }

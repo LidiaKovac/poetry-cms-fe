@@ -1,3 +1,4 @@
+import { current } from "@reduxjs/toolkit"
 import { useEffect, useRef, useState } from "react"
 import { Container, Table, Dropdown, Spinner, Alert } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
@@ -17,7 +18,7 @@ export const CMS = () => {
   const dispatch = useDispatch()
   const poems = useSelector((state: RootState) => state.poems.all)
   const filtered = useSelector((state: RootState) => state.poems.filtered)
-
+  const [sort, setSort] = useState("title_asc")
   const [sources, setSrc] = useState<Set<string>>(new Set())
   const [queries, setQueries] = useState<APIQuery>({
     source: new Set(),
@@ -37,6 +38,9 @@ export const CMS = () => {
   const error = useSelector((state: RootState) => state.error.value)
 
   const createQuery = (field: string, query: string | Array<string>) => {
+    if (field === "sort") {
+      setSort(query as string)
+    }
     console.log(Object.keys(queries))
     let newQuery = queries[field as keyof APIQuery]
     // console.log(newQuery);
@@ -62,11 +66,13 @@ export const CMS = () => {
       return q
     })
     // getQueryString(queries)
-    getPoems(queries)
+    getPoems(queries).then((foundPoems) => dispatch(set(foundPoems)))
   }
 
   useEffect(() => {
-    getPoems()
+    queries.sort.clear()
+    queries.sort.add(sort)
+    getPoems(queries)
       .then((res) => dispatch(set(res)))
       .then(() => {
         setSrc(new Set(poems.map((p) => p.source.toLowerCase())))
@@ -95,7 +101,7 @@ export const CMS = () => {
     if (filters.length > 0)
       createQuery(
         "tags",
-        filters.map((f) => f.word)
+        filters.map((f) => f._id)
       )
   }, [filters])
   return (
@@ -113,8 +119,44 @@ export const CMS = () => {
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th onClick={() => createQuery("sort", "title")}> Title </th>
-                <th onClick={() => createQuery("sort", "author")}> Author </th>
+                <th
+                  onClick={() => {
+                    let currentSort = queries.sort.values().next().value
+                    createQuery(
+                      "sort",
+                      currentSort === "title_asc" ? "title_desc" : "title_asc"
+                    )
+                  }}
+                >
+                  Title
+                  {sort.includes("title") &&
+                    (queries.sort.values().next().value === "title_asc"
+                      ? " 🔽 "
+                      : " 🔼 ")}
+                </th>
+                <th
+                  onClick={() => {
+                    let currentSort = queries.sort.values().next().value
+                    createQuery(
+                      "sort",
+                      currentSort === "author_asc"
+                        ? "author_desc"
+                        : "author_asc"
+                    )
+                    createQuery(
+                      "sort",
+                      currentSort === "author_asc"
+                        ? "author_desc"
+                        : "author_asc"
+                    )
+                  }}
+                >
+                  Author
+                  {sort.includes("author") &&
+                    (queries.sort.values().next().value === "author_asc"
+                      ? " 🔽 "
+                      : " 🔼 ")}
+                </th>
                 <th>
                   <Dropdown>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -172,14 +214,37 @@ export const CMS = () => {
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
+                  {selected && (
+                    <span
+                      onClick={() => {
+                        createQuery("source", "")
+                        setSelected("")
+                      }}
+                    >
+                      ❌
+                    </span>
+                  )}
                 </th>
-                <th onClick={() => createQuery("sort", "year")}> Year </th>
+                <th
+                  onClick={() => {
+                    let currentSort = queries.sort.values().next().value
+                    createQuery(
+                      "sort",
+                      currentSort === "year_asc" ? "year_desc" : "year_asc"
+                    )
+                  }}
+                >
+                  Year
+                  {sort.includes("year") &&
+                    (queries.sort.values().next().value === "year_asc"
+                      ? " 🔽 "
+                      : " 🔼 ")}
+                </th>
                 <th>
-                  {" "}
-                  Tags{" "}
+                  Tags
                   {filters.map((f: Tag) => (
                     <Tag word={f} key={f._id} />
-                  ))}{" "}
+                  ))}
                 </th>
                 <th> Link </th>
               </tr>
