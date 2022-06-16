@@ -2,7 +2,8 @@
 import { useEffect, useState, FC } from "react"
 import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from "react-bootstrap"
 import { useDispatch } from "react-redux"
-import { change as changeQuery } from "../../app/reducers/queryReducer"
+import { changeQuery } from "../../app/reducers/poemsReducer"
+
 
 export const Navigation:FC = () => {
     const [query, setQuery] = useState("")

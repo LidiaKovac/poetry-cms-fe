@@ -4,13 +4,17 @@ import { RootState, AppThunk } from '../store';
 export interface PoemsState {
   all: Array<Poem>,
   filtered: Array<Poem>,
-  error: string
+  error: string,
+  tags: Array<Tag>,
+  query: string
 }
 
 const initialState: PoemsState = {
   all: [],
   filtered: [],
-  error: ""
+  error: "",
+  tags: [],
+  query: ""
 };
 
 
@@ -19,35 +23,34 @@ export const poemsSlice = createSlice({
   name: 'poems',
   initialState,
   reducers: {
-    throwError: (state, action: PayloadAction<string>)=> {
+    //error
+    throwError: (state, action: PayloadAction<string>) => {
       state.error = action.payload
     },
+    //poetry
     set: (state, action: PayloadAction<Array<Poem>>) => {
       state.all = action.payload
     },
-    setFiltered: (state, action: PayloadAction<string>) => {
-      if(state.filtered.length > 0) {
-        state.filtered = state.filtered.filter(poem => poem.title.toLowerCase().includes(action.payload ? action.payload.toLowerCase() : ""))
-      } else {
-        state.filtered = state.all.filter(poem => poem.title.toLowerCase().includes(action.payload ? action.payload.toLowerCase() : ""))
-      }
+    //query
+    changeQuery: (state, action: PayloadAction<string>) => {
+      state.query = action.payload
     },
-    setBySource: (state, action: PayloadAction<string>) => {
-      if(state.filtered.length > 0) {
-        state.filtered = state.filtered.filter(poem => poem.source.toLowerCase() === action.payload.toLowerCase())
-      } else {
-        state.filtered = state.all.filter(poem => poem.source.toLowerCase() === action.payload.toLowerCase())
-      }
+    //query - tags
+    addTag: (state, action: PayloadAction<Tag>) => {
+      state.tags = !state.tags.map(tag => tag.word).includes(action.payload.word) ? [...state.tags, action.payload] : [...state.tags]
+    },
+    removeTag: (state, action: PayloadAction<Tag>) => {
+      state.tags = state.tags.filter(tag => tag.word !== action.payload.word)
     },
     setTags: (state, action: PayloadAction<Array<Poem>>) => {
-      if(state.filtered.length > 0) {
-        let newPoems:Array<Poem> = []
-        
+      if (state.filtered.length > 0) {
+        let newPoems: Array<Poem> = []
+
         let currentIds = state.filtered.map(poem => poem._id)
-        
+
         action.payload.forEach(poem => {
           let currentId = poem._id
-          if(currentIds.includes(currentId)) {
+          if (currentIds.includes(currentId)) {
             newPoems.push(poem)
           }
         })
@@ -55,11 +58,24 @@ export const poemsSlice = createSlice({
       } else {
         state.filtered = action.payload
       }
+    },
+    ///query - setters
+    setFiltered: (state, action: PayloadAction<{type:string, query: string}>) => {
+      if (state.filtered.length > 0 && action.payload.query.length > 0) {
+        state.filtered = state.filtered.filter(poem => {
+          let current =  poem[action.payload.type as keyof Poem] as string
+         return current.toLowerCase().includes(action.payload.query.toLowerCase())})
+      } else {
+        state.filtered = state.all.filter(poem => {
+          let current =  poem[action.payload.type as keyof Poem] as string
+         return current.toLowerCase().includes(action.payload.query.toLowerCase())})
+      }
     }
+    
   },
 });
 
-export const { set, setFiltered, setBySource, setTags, throwError } = poemsSlice.actions;
+export const { set, setFiltered, setTags, addTag, removeTag, throwError, changeQuery } = poemsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

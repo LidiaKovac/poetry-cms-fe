@@ -7,7 +7,6 @@ import { setError } from "../../app/reducers/errorReducer"
 import { setLoading } from "../../app/reducers/loadingReducer"
 import {
   set,
-  setBySource,
   setFiltered,
   setTags,
   throwError,
@@ -32,8 +31,8 @@ export const CMS = () => {
   }
   const ref = useRef(0)
   const prev = ref.current
-  const filters = useSelector((state: RootState) => state.filters.value)
-  const query = useSelector((state: RootState) => state.query.value)
+  const filters = useSelector((state: RootState) => state.poems.tags)
+  const query = useSelector((state: RootState) => state.poems.query)
 
   useEffect(() => {
     getPoems()
@@ -46,7 +45,10 @@ export const CMS = () => {
       })
   }, [])
   useEffect(() => {
-    dispatch(setFiltered(query))
+    dispatch(setFiltered({type: "title", query}))
+    if(query.length === 0) {
+      dispatch(set([]))
+    }
   }, [query])
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export const CMS = () => {
   }, [filtered])
 
   useEffect(() => {
-    dispatch(setBySource(selected))
+    dispatch(setFiltered({type: "source", query: selected}))
   }, [selected])
   useEffect(() => {
     setLoader(true)
@@ -132,7 +134,7 @@ export const CMS = () => {
               </tr>
             </thead>
             <tbody>
-              {(filtered.length > 0 && query.length > 0)
+              {filtered.length > 0
                 ? filtered.map((p) => {
                     return <Single key={p._id} poem={p} />
                   })

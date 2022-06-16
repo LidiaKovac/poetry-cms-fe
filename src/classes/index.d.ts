@@ -4,7 +4,7 @@ class Poem {
     text: string
     source: string
     year: string
-    tags: Array<Tag> 
+    tags: Array<Tag>
     _id: string
 }
 

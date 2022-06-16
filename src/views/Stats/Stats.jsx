@@ -16,12 +16,12 @@ export const Stats = () => {
     const [loading, setLoading] = useState(true)
     const findWord = (query) => {
         
-        fetch("http://localhost:3002/poems/stats")
+        fetch("http://localhost:3001/poems/stats")
         .then((res) => res.json())
         .then((poems) => setWord(poems.filter(w => w.word.toLowerCase().includes(query.toLowerCase()))))
     }
     useEffect(() => {
-      fetch("http://localhost:3002/poems/stats")
+      fetch("http://localhost:3001/poems/stats")
         .then((res) => res.json())
         .then((poems) => setData(poems.slice(0, 10)))
         .finally(()=> setLoading(false))
