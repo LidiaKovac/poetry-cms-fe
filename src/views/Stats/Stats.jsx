@@ -19,11 +19,13 @@ export const Stats = () => {
         fetch("http://localhost:3001/poems/stats")
         .then((res) => res.json())
         .then((poems) => setWord(poems.filter(w => w.word.toLowerCase().includes(query.toLowerCase()))))
+        .catch(err => alert(err))
     }
     useEffect(() => {
       fetch("http://localhost:3001/poems/stats")
         .then((res) => res.json())
         .then((poems) => setData(poems.slice(0, 10)))
+        .catch(err => alert(err))
         .finally(()=> setLoading(false))
     }, [])
   return <> 

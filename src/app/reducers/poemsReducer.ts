@@ -60,22 +60,22 @@ export const poemsSlice = createSlice({
       }
     },
     ///query - setters
-    setFiltered: (state, action: PayloadAction<{type:string, query: string}>) => {
-      if (state.filtered.length > 0 && action.payload.query.length > 0) {
-        state.filtered = state.filtered.filter(poem => {
-          let current =  poem[action.payload.type as keyof Poem] as string
-         return current.toLowerCase().includes(action.payload.query.toLowerCase())})
-      } else {
-        state.filtered = state.all.filter(poem => {
-          let current =  poem[action.payload.type as keyof Poem] as string
-         return current.toLowerCase().includes(action.payload.query.toLowerCase())})
-      }
-    }
+    // setFiltered: (state, action: PayloadAction<{type:string, query: string}>) => {
+    //   if (state.filtered.length > 0 && action.payload.query.length > 0) {
+    //     state.filtered = state.filtered.filter(poem => {
+    //       let current =  poem[action.payload.type as keyof Poem] as string
+    //      return current.toLowerCase().includes(action.payload.query.toLowerCase())})
+    //   } else {
+    //     state.filtered = state.all.filter(poem => {
+    //       let current =  poem[action.payload.type as keyof Poem] as string
+    //      return current.toLowerCase().includes(action.payload.query.toLowerCase())})
+    //   }
+    // }
     
   },
 });
 
-export const { set, setFiltered, setTags, addTag, removeTag, throwError, changeQuery } = poemsSlice.actions;
+export const { set, /*setFiltered,*/ setTags, addTag, removeTag, throwError, changeQuery } = poemsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

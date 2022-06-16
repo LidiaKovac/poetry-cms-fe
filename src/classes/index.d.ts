@@ -20,3 +20,10 @@ class YearlyOccurences {
     year: string
     occurences: number
 }
+
+class APIQuery {
+    source: Set<string>
+    sort: Set<string>
+    tags: Set<string>
+    title: Set<string>
+}
