@@ -8,5 +8,5 @@ export const getQueryString = (queryObject:APIQuery, page:number):string => {
         finalString += key + "=" + query + "&"
 
     })
-    return finalString + "page=" + page
+    return finalString + "page=" + page + "&size=15"
 }
