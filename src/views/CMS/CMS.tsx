@@ -1,12 +1,13 @@
 import { current } from "@reduxjs/toolkit"
 import { useEffect, useRef, useState } from "react"
-import { Container, Table, Dropdown, Spinner, Alert } from "react-bootstrap"
+import { Container, Table, Dropdown, Spinner, Alert, Pagination } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
-import { getPoems } from "../../API"
+import { getCount, getPoems } from "../../API"
 import { setError } from "../../app/reducers/errorReducer"
 import { setLoading } from "../../app/reducers/loadingReducer"
 import {
   set,
+  setCount,
   //setFiltered,
   throwError,
 } from "../../app/reducers/poemsReducer"
@@ -18,6 +19,8 @@ export const CMS = () => {
   const dispatch = useDispatch()
   const poems = useSelector((state: RootState) => state.poems.all)
   const filtered = useSelector((state: RootState) => state.poems.filtered)
+  const count = useSelector((state: RootState) => state.poems.count)
+
   const [sort, setSort] = useState("title_asc")
   const [sources, setSrc] = useState<Set<string>>(new Set())
   const [queries, setQueries] = useState<APIQuery>({
@@ -27,10 +30,10 @@ export const CMS = () => {
     title: new Set(),
   })
   const [selected, setSelected] = useState("")
+  const [pages, setPages] = useState<Array<number>>([1])
+  const [current, setCurrent] = useState<number>(1)
+
   const loading = useSelector((state: RootState) => state.loading.value)
-  const setLoader = (isLoading: Boolean) => {
-    dispatch(setLoading(isLoading))
-  }
   const ref = useRef(0)
   const prev = ref.current
   const filters = useSelector((state: RootState) => state.poems.tags)
@@ -38,6 +41,7 @@ export const CMS = () => {
   const error = useSelector((state: RootState) => state.error.value)
 
   const createQuery = (field: string, query: string | Array<string>) => {
+    dispatch(setLoading(true))
     if (field === "sort") {
       setSort(query as string)
     }
@@ -66,22 +70,33 @@ export const CMS = () => {
       return q
     })
     // getQueryString(queries)
-    getPoems(queries).then((foundPoems) => dispatch(set(foundPoems)))
+    getPoems(queries).then((foundPoems) => dispatch(set(foundPoems))).then(()=> dispatch(setLoading(false)) )
   }
-
+  useEffect(()=> {
+    setPages([])
+    for (let i = 0; i < count/15; i++) {
+      setPages(p => [...p, i+1])
+    }
+  }, [count])
   useEffect(() => {
+    dispatch(setLoading(true))
     queries.sort.clear()
     queries.sort.add(sort)
-    getPoems(queries)
+    getPoems(queries, current)
       .then((res) => dispatch(set(res)))
+      .then(()=> getCount())
+      .then((count) => {
+        console.log("from API", count);
+        
+        dispatch(setCount(count))})
       .then(() => {
         setSrc(new Set(poems.map((p) => p.source.toLowerCase())))
       })
       .catch((err) => dispatch(setError(err)))
       .finally(() => {
-        setLoader(false)
+       dispatch( setLoading(false))
       })
-  }, [])
+  }, [current])
   useEffect(() => {
     if (query.length > 0) {
       createQuery("title", query)
@@ -115,10 +130,15 @@ export const CMS = () => {
       {loading ? (
         <Spinner animation="border" role="status"></Spinner>
       ) : (
+        
         <Container className="cms__wrap">
+          <Pagination size="lg">
+            {pages.map(p => <Pagination.Item onClick={()=> setCurrent(p)} active={p === current}>{p}</Pagination.Item>)}
+          </Pagination>
           <Table striped bordered hover>
             <thead>
               <tr>
+                <th>#</th>
                 <th
                   onClick={() => {
                     let currentSort = queries.sort.values().next().value
@@ -251,16 +271,19 @@ export const CMS = () => {
             </thead>
             <tbody>
               {filtered.length > 0
-                ? filtered.map((p) => {
-                    return <Single key={p._id} poem={p} />
+                ? filtered.map((p, i) => {
+                    return <Single key={p._id} i={i} poem={p} />
                   })
                 : poems
                     // .sort((a, b) => a[sort as keyof Poem].localeCompare(b[sort as keyof Poem]))
-                    .map((p) => {
-                      return <Single key={p._id} poem={p} />
+                    .map((p, i) => {
+                      return <Single key={p._id} i={i} poem={p} />
                     })}
             </tbody>
           </Table>
+          <Pagination size="lg">
+            {pages.map(p => <Pagination.Item onClick={()=> setCurrent(p)} active={p === current}>{p}</Pagination.Item>)}
+          </Pagination>
         </Container>
       )}
     </>

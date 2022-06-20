@@ -5,11 +5,13 @@ import { Tag } from "../Tag/Tag"
 // import "./Single.scss"
 interface SingleProps {
   poem: Poem,
+  i: number
 }
-export const Single:FC<SingleProps> = ({ poem }) => {
+export const Single:FC<SingleProps> = ({ poem,i }) => {
   return (
     <>
       <tr>
+        <td>{i + 1}</td>
         <td>
           <strong>{poem.title}</strong>
         </td>

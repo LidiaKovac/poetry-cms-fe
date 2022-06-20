@@ -6,7 +6,8 @@ export interface PoemsState {
   filtered: Array<Poem>,
   error: string,
   tags: Array<Tag>,
-  query: string
+  query: string,
+  count: number
 }
 
 const initialState: PoemsState = {
@@ -14,7 +15,8 @@ const initialState: PoemsState = {
   filtered: [],
   error: "",
   tags: [],
-  query: ""
+  query: "",
+  count: 0
 };
 
 
@@ -59,6 +61,11 @@ export const poemsSlice = createSlice({
         state.filtered = action.payload
       }
     },
+    setCount: (state,action:PayloadAction<number> ) => {
+      console.log(action.payload);
+      
+      state.count = action.payload
+    }
     ///query - setters
     // setFiltered: (state, action: PayloadAction<{type:string, query: string}>) => {
     //   if (state.filtered.length > 0 && action.payload.query.length > 0) {
@@ -75,7 +82,7 @@ export const poemsSlice = createSlice({
   },
 });
 
-export const { set, /*setFiltered,*/ setTags, addTag, removeTag, throwError, changeQuery } = poemsSlice.actions;
+export const { set, /*setFiltered,*/ setTags, addTag, removeTag, throwError, changeQuery, setCount } = poemsSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

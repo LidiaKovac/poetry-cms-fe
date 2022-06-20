@@ -21,6 +21,20 @@ export const getPoems = async (query?: APIQuery, page = 1): Promise<Array<Poem>>
   }
 }
 
+export const getCount = async (): Promise<number> => {
+  let count = 0
+  try {
+    let res = await fetch(process.env.REACT_APP_BE_URL + "/count")
+    let {count: found} = await res.json()
+    
+    
+    count = found
+  } catch (error) {
+    console.log(error)
+  }
+  return count
+}
+
 export const getPoemsBySource = async (source?: string): Promise<Array<Poem>> => {
   try {
     let raw = await fetch(
