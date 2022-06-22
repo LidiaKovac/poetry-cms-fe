@@ -47,9 +47,9 @@ function App() {
     // </BarChart>
     <>
       <BrowserRouter>
-        <Navigation getQuery={(d) => setQuery(d)} />
+        <Navigation />
         <Routes>
-          <Route path="/" element={<CMS query={query} />} />
+          <Route path="/" element={<CMS />} />
           <Route path="/:id" element={<SingleView/>} />
           <Route path="/stats" element={<Stats/>}/>
         </Routes>

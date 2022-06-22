@@ -1,11 +1,17 @@
 // import "./Nav.scss"
-import { useEffect, useState } from "react"
+import { useEffect, useState, FC } from "react"
 import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from "react-bootstrap"
-export const Navigation = ({getQuery}) => {
+import { useDispatch } from "react-redux"
+import { changeQuery } from "../../app/reducers/poemsReducer"
+
+
+export const Navigation:FC = () => {
     const [query, setQuery] = useState("")
+    const dispatch = useDispatch()
     useEffect(()=> {
         // if(query.length > 3) {
-            getQuery(query)
+            // getQuery(query)
+            dispatch(changeQuery(query))
         // }
     }, [query])
   return (
