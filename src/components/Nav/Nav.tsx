@@ -1,19 +1,19 @@
-// import "./Nav.scss"
 import { useEffect, useState, FC } from "react"
-import {Navbar, Nav, NavDropdown, Form, FormControl, Button} from "react-bootstrap"
-import { useDispatch } from "react-redux"
-import { changeQuery } from "../../app/reducers/poemsReducer"
+import { Navbar, Nav, Form, FormControl } from "react-bootstrap"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "../../app/store"
+import { setQuery } from "../../app/reducers/queryReducer"
 
 
-export const Navigation:FC = () => {
-    const [query, setQuery] = useState("")
-    const dispatch = useDispatch()
-    useEffect(()=> {
-        // if(query.length > 3) {
-            // getQuery(query)
-            dispatch(changeQuery(query))
-        // }
-    }, [query])
+export const Navigation: FC = () => {
+  const [title, setTitle] = useState<string>("")
+  const dispatch = useDispatch()
+  const queryObject = useSelector((state: RootState) => state.query.value)
+
+  useEffect(() => {
+    dispatch(setQuery({ ...queryObject, title }))
+  }, [title])
+
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -24,7 +24,7 @@ export const Navigation:FC = () => {
             <Nav.Link href="/stats">Stats</Nav.Link>
           </Nav>
           <Form>
-            <FormControl onChange={(e)=> setQuery(e.target.value)} type="text" placeholder="Search by title" className="mr-sm-2" />
+            <FormControl onChange={(e) => setTitle(e.target.value)} type="text" placeholder="Search by title" className="mr-sm-2" />
           </Form>
         </Navbar.Collapse>
       </Navbar>

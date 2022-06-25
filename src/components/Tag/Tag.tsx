@@ -1,28 +1,31 @@
 import { FC } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addTag, removeTag } from "../../app/reducers/poemsReducer"
+import { addTag, removeTag } from "../../app/reducers/queryReducer"
 
 import { RootState } from "../../app/store"
 import "./Tag.scss"
 interface TagProps {
-  word: Tag
+  tag: Tag
 }
-export const Tag: FC<TagProps> = ({ word }) => {
+export const Tag: FC<TagProps> = ({ tag }) => {
   const dispatch = useDispatch()
-  const filters = useSelector((state: RootState) => state.poems.tags)
+  const filters = useSelector((state: RootState) => state.query.value.tags)
   const handleFilters = () => {
-    filters.map((f) => f.word).includes(word.word)
-      ? dispatch(removeTag(word))
-      : dispatch(addTag(word))
+    [...filters].map((f) => {
+      let currentFilter = f as Tag
+      return currentFilter.word
+    }).includes(tag.word)
+      ? dispatch(removeTag(tag))
+      : dispatch(addTag(tag))
   }
   return (
     <>
       <button
         onClick={() => handleFilters()}
         className="tag__main"
-        style={{ backgroundColor: word.color }}
+        style={{ backgroundColor: tag.color }}
       >
-        {word.word}
+        {tag.word}
       </button>{" "}
     </>
   )

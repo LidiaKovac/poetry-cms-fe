@@ -1,13 +1,11 @@
 import { getQueryString } from "../utils"
 
 
-export const getPoems = async (query?: APIQuery, page = 1): Promise<Array<Poem>> => {
+export const getPoems = async (query?: APIQuery): Promise<{poems: Array<Poem>, count: number}> => {
   try {
-    console.log(query);
     let q = ""
     if (query) {
-      q = getQueryString(query as APIQuery, page)
-      console.log(q);
+      q = getQueryString(query as APIQuery)
     }
 
     let raw = await fetch(
@@ -17,7 +15,7 @@ export const getPoems = async (query?: APIQuery, page = 1): Promise<Array<Poem>>
     return poems
   } catch (error) {
     console.error(error)
-    return []
+    return {poems: [], count: 0}
   }
 }
 
@@ -30,7 +28,7 @@ export const getCount = async (): Promise<number> => {
     
     count = found
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
   return count
 }

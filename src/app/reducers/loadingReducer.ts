@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '../store';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 
 export interface LoadingState {
   value: Boolean
@@ -14,13 +14,13 @@ export const loadingSlice = createSlice({
   name: 'loading',
   initialState,
   reducers: {
-    setLoading: (state, action:PayloadAction<Boolean>) => {
+    toggleLoading: (state, action:PayloadAction<Boolean>) => {
       state.value = action.payload
     }
   },
 });
 
-export const { setLoading } = loadingSlice.actions;
+export const { toggleLoading } = loadingSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

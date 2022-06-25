@@ -1,12 +1,18 @@
-export const getQueryString = (queryObject:APIQuery, page:number):string => {
+export const getQueryString = (queryObject: APIQuery): string => {
     let finalString = "?"
-    Object.keys(queryObject).forEach((key, i) => {
-        // if(i > 0 && queryObject[key as keyof APIQuery].size > 0) finalString += "&"
-        let currentKey:Array<string> = []
-        queryObject[key as keyof APIQuery].forEach(query => currentKey.push(query))
+    Object.keys(queryObject).forEach((key) => {
+        let currentKey: Array<string> = []
+        if (typeof queryObject[key as keyof APIQuery] === "string" || typeof queryObject[key as keyof APIQuery] === "number") {
+            currentKey.push(queryObject[key as keyof APIQuery] as string)
+        } else {
+            //in case of tags
+            let tags = queryObject[key as keyof APIQuery] as Array<Tag>
+            let tagIds = tags.map(tag => tag._id)
+            tagIds.forEach(query => currentKey.push(query))
+        }
         let query = currentKey.join("+").replaceAll(" ", "%20")
         finalString += key + "=" + query + "&"
 
     })
-    return finalString + "page=" + page + "&size=15"
+    return finalString + "size=15"
 }

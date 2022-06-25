@@ -2,7 +2,6 @@ import { FC } from "react"
 import { Link } from "react-router-dom"
 import { Tag } from "../Tag/Tag"
 
-// import "./Single.scss"
 interface SingleProps {
   poem: Poem,
   i: number
@@ -20,7 +19,7 @@ export const Single:FC<SingleProps> = ({ poem,i }) => {
         <td>{poem.year}</td>
         <td>
           {poem.tags?.map((t:Tag) => (
-            <Tag key={t._id} word={t} />
+            <Tag key={t._id} tag={t} />
           ))}
         </td>
         <td>

@@ -5,7 +5,7 @@ class Poem {
     source: string
     year: string
     tags: Array<Tag>
-    _id: string
+    _id?: string
 }
 
 class Tag {
@@ -22,8 +22,9 @@ class YearlyOccurences {
 }
 
 class APIQuery {
-    source: Set<string>
-    sort: Set<string>
-    tags: Set<string>
-    title: Set<string>
+    source: string
+    tags: Array<Tag>
+    sort: string
+    title: string
+    page: number
 }
