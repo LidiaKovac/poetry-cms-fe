@@ -2,17 +2,17 @@
 import { useEffect } from "react";
 //  => Redux
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+import { RootState } from "@redux-config/store";
 //  =>  =>  Reducers
-import { setError } from "../../app/reducers/errorReducer";
-import { toggleLoading } from "../../app/reducers/loadingReducer";
-import { set } from "../../app/reducers/poemsReducer";
-import { setQuery } from "../../app/reducers/queryReducer";
+import { setError } from "@redux-config/reducers/errorReducer";
+import { toggleLoading } from "@redux-config/reducers/loadingReducer";
+import { set } from "@redux-config/reducers/poemsReducer";
+import { setQuery } from "@redux-config/reducers/queryReducer";
 
 //  => Components
-import { Single } from "../../components/Single/Single";
-import { Sort } from "../../components/Sort/Sort";
-import { Tag } from "../../components/Tag/Tag";
+import { Single } from "@components/Single/Single";
+import { Sort } from "@components/Sort/Sort";
+import { Tag } from "@components/Tag/Tag";
 //  =>  =>  Bootstrap
 import { Container, Table, Dropdown, Spinner, Alert, Pagination } from "react-bootstrap";
 

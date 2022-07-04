@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "target": "es2021",
+    "baseUrl": ".",
+    "paths": {
+      "@redux-config*": ["src/redux-config*"],
+      "@components*": ["src/components*"],
+    },
     "lib": [
       "dom",
       "dom.iterable",

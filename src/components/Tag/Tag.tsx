@@ -1,8 +1,8 @@
 import { FC } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { addTag, removeTag } from "../../app/reducers/queryReducer"
+import { addTag, removeTag } from "@redux-config/reducers/queryReducer"
 
-import { RootState } from "../../app/store"
+import { RootState } from "@redux-config/store"
 import "./Tag.scss"
 interface TagProps {
   tag: Tag
