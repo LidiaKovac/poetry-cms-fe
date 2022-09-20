@@ -1,6 +1,6 @@
 import { FC } from "react"
 import { Link } from "react-router-dom"
-import { Tag } from "../Tag/Tag"
+import { Tag } from "components/Tag/Tag"
 
 interface SingleProps {
   poem: Poem,

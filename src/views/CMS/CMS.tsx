@@ -2,22 +2,22 @@
 import { useEffect } from "react";
 //  => Redux
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@redux-config/store";
+import { RootState } from "redux-config/store";
 //  =>  =>  Reducers
-import { setError } from "@redux-config/reducers/errorReducer";
-import { toggleLoading } from "@redux-config/reducers/loadingReducer";
-import { set } from "@redux-config/reducers/poemsReducer";
-import { setQuery } from "@redux-config/reducers/queryReducer";
+import { setError } from "redux-config/reducers/errorReducer";
+import { toggleLoading } from "redux-config/reducers/loadingReducer";
+import { set } from "redux-config/reducers/poemsReducer";
+import { setQuery } from "redux-config/reducers/queryReducer";
 
 //  => Components
-import { Single } from "@components/Single/Single";
-import { Sort } from "@components/Sort/Sort";
-import { Tag } from "@components/Tag/Tag";
+import { Single } from "components/Single/Single";
+import { Sort } from "components/Sort/Sort";
+import { Tag } from "components/Tag/Tag";
 //  =>  =>  Bootstrap
 import { Container, Table, Dropdown, Spinner, Alert, Pagination } from "react-bootstrap";
 
 //API
-import { getPoems } from "../../API";
+import { getPoems } from "API";
 
 //CSS
 import "./CMS.scss";
@@ -45,7 +45,7 @@ export const CMS = () => {
   // Query Handling
   const createQuery = (field: string, query: string | Array<string> | number) => {
     let newQuery = queryObject[field as keyof APIQuery] as string | number;
-    
+
     switch (field) {
       case "sort":
         let currentSort = queryObject.sort;
@@ -109,9 +109,9 @@ export const CMS = () => {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                      {sources?.map((src,i) => (
+                      {sources?.map((src, i) => (
                         <Dropdown.Item
-                        key={"src_" + i}
+                          key={"src_" + i}
                           onClick={() => {
                             createQuery("source", src);
                           }}

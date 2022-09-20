@@ -1,8 +1,8 @@
 import { useEffect, useState, FC } from "react"
 import { Navbar, Nav, Form, FormControl } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "../../redux-config/store"
-import { setQuery } from "../../redux-config/reducers/queryReducer"
+import { RootState } from "redux-config/store"
+import { setQuery } from "redux-config/reducers/queryReducer"
 
 
 export const Navigation: FC = () => {

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { Params, useParams } from "react-router-dom"
 import { Container, Spinner } from "react-bootstrap"
-import { getSingle } from "../../API"
+import { getSingle } from "API"
 import "./SingleView.scss"
-import { Tag } from "@components/Tag/Tag"
+import { Tag } from "components/Tag/Tag"
 export const SingleView = () => {
   const { id }: Readonly<Params<string>> = useParams()
   const [poem, setPoem] = useState<Poem>({
