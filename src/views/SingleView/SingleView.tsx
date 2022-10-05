@@ -21,7 +21,7 @@ export const SingleView = () => {
         ...res,
         text: res.text.replaceAll("\r", "<br>").replaceAll("\n", "<br>"),
       })
-    )
+    ).finally(()=> setLoading(false))
   }, [])
   return <Container className="m-4">
     {loading ? (

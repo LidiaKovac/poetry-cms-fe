@@ -3,6 +3,7 @@ import { Navbar, Nav, Form, FormControl } from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "redux-config/store"
 import { setQuery } from "redux-config/reducers/queryReducer"
+import { logout } from "API"
 
 
 export const Navigation: FC = () => {
@@ -20,8 +21,14 @@ export const Navigation: FC = () => {
         <Navbar.Brand href="/">Poems CMS</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto" >
+            <Nav.Link disabled href="/stats">Stats</Nav.Link>
+          </Nav>
+          <Nav className="mr-2" onClick={()=> logout()}>
+            Logout
+          </Nav>
           <Nav className="mr-auto">
-            <Nav.Link href="/stats">Stats</Nav.Link>
+            <Nav.Link href="/new">Add</Nav.Link>
           </Nav>
           <Form>
             <FormControl onChange={(e) => setTitle(e.target.value)} type="text" placeholder="Search by title" className="mr-sm-2" />
