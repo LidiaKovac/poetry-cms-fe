@@ -16,8 +16,10 @@ import { Tag } from "components/Tag/Tag";
 //  =>  =>  Bootstrap
 import { Container, Table, Dropdown, Spinner, Alert, Pagination } from "react-bootstrap";
 
+import { useSearchParams, useNavigate } from "react-router-dom";
+
 //API
-import { getPoems } from "API";
+import { getPoems, login } from "API";
 
 //CSS
 import "./CMS.scss";
@@ -33,8 +35,21 @@ export const CMS = () => {
 
   //Hooks
   const dispatch = useDispatch();
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+
   //INITIAL FETCH
   useEffect(() => {
+    console.log(searchParams.get("id"), localStorage.getItem("user"));
+    
+    if(searchParams.get("id") !== null) {
+      login(searchParams.get("id"))
+
+    } else if(localStorage.getItem("user") !== 'null') {
+      login(localStorage.getItem("user"))
+    } else {
+      window.location.assign("http://localhost:3001/user/login")
+    }
     getPoems(queryObject)
       .then((res) => dispatch(set(res)))
       .catch((err) => dispatch(setError(err)))

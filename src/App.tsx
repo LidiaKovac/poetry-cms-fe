@@ -7,10 +7,11 @@ import { Navigation } from "./components/Nav/Nav"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { SingleView } from "./views/SingleView/SingleView"
 import { Stats } from "./views/Stats/Stats"
+import { useSearchParams } from "react-router-dom"
+import { useEffect } from "react"
 
-function App() {
+function App() {  
   
-
   return (
 
     <>

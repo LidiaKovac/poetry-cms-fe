@@ -1,5 +1,16 @@
 import { getQueryString } from "../utils"
 
+export const login = async (id:string | null) => {
+  localStorage.setItem("user", id!)
+  let raw = await fetch(
+    process.env.REACT_APP_BE_URL + "/user/me", {
+      headers: {
+        authentication: id!
+      }
+    }
+  )
+  let poems = await raw.json()
+}
 
 export const getPoems = async (query?: APIQuery): Promise<{poems: Array<Poem>, count: number}> => {
   try {
@@ -9,7 +20,7 @@ export const getPoems = async (query?: APIQuery): Promise<{poems: Array<Poem>, c
     }
 
     let raw = await fetch(
-      process.env.REACT_APP_BE_URL + (q.length > 0 ? q : "")
+      process.env.REACT_APP_BE_URL + "/poems" + (q.length > 0 ? q : "")
     )
     let poems = await raw.json()
     return poems
@@ -22,7 +33,7 @@ export const getPoems = async (query?: APIQuery): Promise<{poems: Array<Poem>, c
 export const getCount = async (): Promise<number> => {
   let count = 0
   try {
-    let res = await fetch(process.env.REACT_APP_BE_URL + "/count")
+    let res = await fetch(process.env.REACT_APP_BE_URL + "/poems/count")
     let {count: found} = await res.json()
     
     
@@ -36,7 +47,7 @@ export const getCount = async (): Promise<number> => {
 export const getPoemsBySource = async (source?: string): Promise<Array<Poem>> => {
   try {
     let raw = await fetch(
-      process.env.REACT_APP_BE_URL + "/source/" + source
+      process.env.REACT_APP_BE_URL + "/poems/source/" + source
     )
     let poems = await raw.json()
     return poems
@@ -48,7 +59,7 @@ export const getPoemsBySource = async (source?: string): Promise<Array<Poem>> =>
 
 export const getSingle = async (id: string): Promise<Poem> => {
   try {
-    let raw = await fetch(process.env.REACT_APP_BE_URL + "/single/" + id)
+    let raw = await fetch(process.env.REACT_APP_BE_URL + "/poems/single/" + id)
     let poems = await raw.json()
     return poems
   } catch (error) {
