@@ -8,6 +8,7 @@ export const login = async (id:string | null) => {
       }
     }
   )
+  return raw.status
 }
 
 export const addNewPoem = async(formData:FormData) => {

@@ -41,15 +41,19 @@ export const CMS = () => {
   //INITIAL FETCH
   useEffect(() => {
     console.log(searchParams.get("id"), localStorage.getItem("user"));
-    
+    let key:string = ""
     if(searchParams.get("id") !== null) {
-      login(searchParams.get("id"))
+      // login(searchParams.get("id"))
+      key = searchParams.get("id") as string
 
     } else if(localStorage.getItem("user") !== 'null') {
-      login(localStorage.getItem("user"))
-    } else {
-      window.location.assign("http://localhost:3001/user/login")
-    }
+      // login(localStorage.getItem("user"))
+      key = localStorage.getItem("user") as string
+    } 
+    login(key).then(isLoginSuccessfull => isLoginSuccessfull !== 200 && window.location.assign("http://localhost:3000/login"))
+    // else {
+    //   window.location.assign("http://localhost:3001/user/login")
+    // }
     getPoems(queryObject)
       .then((res) => dispatch(set(res)))
       .catch((err) => dispatch(setError(err)))
